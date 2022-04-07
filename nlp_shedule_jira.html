@@ -1,0 +1,323 @@
+<html
+        xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<title>Jira</title>
+<style type="text/css">
+table {
+    mso-displayed-decimal-separator:"\.";
+    mso-displayed-thousand-separator:"\,";
+}
+body
+{
+    margin: 0px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color:black;
+}
+
+</style>
+<META HTTP-EQUIV="Content-Type" Content="application/vnd.ms-excel; charset=UTF-8">
+<!-- JRA-7598 - ensure fields (e.g. description) occupy only one cell - even fields containing newlines. -->
+<!--
+Vertical align all cells to the top, in order to align all issue rows of issuetable to the top,
+since Excel does not use or save the css files it is hardcoded here.
+-->
+<style>
+@page
+{
+mso-page-orientation:landscape;
+margin:.25in .25in .5in .25in;
+mso-header-margin:.5in;
+mso-footer-margin:.25in;
+mso-footer-data:"&R&P of &N";
+mso-horizontal-page-align:center;
+mso-vertical-page-align:center;
+}
+
+td.issuekey,
+td.issuetype,
+td.status {
+    mso-style-parent: "";
+    mso-number-format: \@;
+    text-align: left;
+}
+br
+{
+    mso-data-placement:same-cell;
+}
+
+td
+{
+    vertical-align: top;
+}
+</style>
+
+<!--[if gte mso 9]><xml>
+<x:ExcelWorkbook>
+<x:ExcelWorksheets>
+<x:ExcelWorksheet>
+<x:Name>general_report</x:Name>
+<x:WorksheetOptions>
+<x:Print>
+<x:ValidPrinterInfo/>
+</x:Print>
+</x:WorksheetOptions>
+</x:ExcelWorksheet>
+</x:ExcelWorksheets>
+</x:ExcelWorkbook>
+</xml><![endif]-->
+</head>
+<body>
+
+<table border="1">
+    <tr bgcolor="#205081" height="30">
+        <td colspan="11">
+            <img src="https://banking-app.atlassian.net/images/icon-jira-software-logo.png" width="57" height="30" border="0" alt="Jira">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="11">
+            <a href="https://banking-app.atlassian.net/issues/?jql=project+%3D+NLC+order+by+created+DESC">Jira</a>
+        </td>
+    </tr>
+    <tr>
+                <td colspan="11">
+            Displaying <strong>6</strong> issues at <strong>05/Apr/22 1:51 PM</strong>.
+        </td>
+    </tr>
+</table>
+
+
+
+
+                                        <table id="issuetable" class="aui " border="1" cellpadding="3" cellspacing="1" width="100%">
+                        <thead>
+        <tr class="rowHeader">
+            
+                                                            <th class="colHeaderLink headerrow-issuetype" data-id="issuetype">
+                            Issue Type
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-issuekey" data-id="issuekey">
+                            Key
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-summary" data-id="summary">
+                            Summary
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-assignee" data-id="assignee">
+                            Assignee
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-reporter" data-id="reporter">
+                            Reporter
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-priority" data-id="priority">
+                            Priority
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-status" data-id="status">
+                            Status
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-resolution" data-id="resolution">
+                            Resolution
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-created" data-id="created">
+                            Created
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-updated" data-id="updated">
+                            Updated
+                                                    </th>
+                                                
+                                                            <th class="colHeaderLink headerrow-duedate" data-id="duedate">
+                            Due date
+                                                    </th>
+                                                                    </tr>
+    </thead>
+    <tbody>
+                    
+
+                <tr id="issuerow10088" rel="10088" data-issuekey="NLC-6" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-6" href="https://banking-app.atlassian.net/browse/NLC-6">NLC-6</a>
+</td>
+                                            <td class="summary"><p>
+                report the results
+    </p>
+</td>
+                                            <td class="assignee">    <em>Unassigned</em>
+</td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-blue-gray jira-issue-status-lozenge-new aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;To Do&lt;/span&gt;">To Do</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:16 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:19 AM </td>
+                                            <td class="duedate">    31/May/22
+</td>
+                    </tr>
+
+
+                <tr id="issuerow10087" rel="10087" data-issuekey="NLC-5" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-5" href="https://banking-app.atlassian.net/browse/NLC-5">NLC-5</a>
+</td>
+                                            <td class="summary"><p>
+                evaluate text complexity score
+    </p>
+</td>
+                                            <td class="assignee">            Weronika Piotrowska
+    </td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-blue-gray jira-issue-status-lozenge-new aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;To Do&lt;/span&gt;">To Do</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:15 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:23 AM </td>
+                                            <td class="duedate">    17/May/22
+</td>
+                    </tr>
+
+
+                <tr id="issuerow10086" rel="10086" data-issuekey="NLC-4" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-4" href="https://banking-app.atlassian.net/browse/NLC-4">NLC-4</a>
+</td>
+                                            <td class="summary"><p>
+                evaluate Flesch-Kincaid Grade Level
+    </p>
+</td>
+                                            <td class="assignee">            marcin.wojnarowski2.stud
+    </td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-blue-gray jira-issue-status-lozenge-new aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;To Do&lt;/span&gt;">To Do</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:14 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:23 AM </td>
+                                            <td class="duedate">    17/May/22
+</td>
+                    </tr>
+
+
+                <tr id="issuerow10085" rel="10085" data-issuekey="NLC-3" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-3" href="https://banking-app.atlassian.net/browse/NLC-3">NLC-3</a>
+</td>
+                                            <td class="summary"><p>
+                check frequency of passive sentences
+    </p>
+</td>
+                                            <td class="assignee">            Piotr Krzemiński
+    </td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-blue-gray jira-issue-status-lozenge-new aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;To Do&lt;/span&gt;">To Do</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:13 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:23 AM </td>
+                                            <td class="duedate">    17/May/22
+</td>
+                    </tr>
+
+
+                <tr id="issuerow10084" rel="10084" data-issuekey="NLC-2" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-2" href="https://banking-app.atlassian.net/browse/NLC-2">NLC-2</a>
+</td>
+                                            <td class="summary"><p>
+                Basic text analysis
+    </p>
+</td>
+                                            <td class="assignee">            Illia Komlichenko
+    </td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-blue-gray jira-issue-status-lozenge-new aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;To Do&lt;/span&gt;">To Do</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:13 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:22 AM </td>
+                                            <td class="duedate">    17/May/22
+</td>
+                    </tr>
+
+
+                <tr id="issuerow10083" rel="10083" data-issuekey="NLC-1" class="issuerow">
+                                            <td class="issuetype">    Task
+</td>
+                                            <td class="issuekey">
+
+    <a class="issue-link" data-issue-key="NLC-1" href="https://banking-app.atlassian.net/browse/NLC-1">NLC-1</a>
+</td>
+                                            <td class="summary"><p>
+                Scrap data
+    </p>
+</td>
+                                            <td class="assignee">            kamil.monicz.stud
+    </td>
+                                            <td class="reporter">            Weronika Piotrowska
+    </td>
+                                            <td class="priority">           Medium
+    </td>
+                                            <td class="status">
+                <span class=" jira-issue-status-lozenge aui-lozenge jira-issue-status-lozenge-yellow jira-issue-status-lozenge-indeterminate aui-lozenge-subtle jira-issue-status-lozenge-max-width-medium" data-tooltip="&lt;span class=&quot;jira-issue-status-tooltip-title&quot;&gt;In Progress&lt;/span&gt;">In Progress</span>    </td>
+                                            <td class="resolution">    <em>Unresolved</em>
+</td>
+                                            <td class="created"> 05/Apr/22 11:12 AM </td>
+                                            <td class="updated"> 05/Apr/22 11:24 AM </td>
+                                            <td class="duedate">    30/Apr/22
+</td>
+                    </tr>
+        </tbody>
+    </table>
+    <div class="end-of-stable-message"></div>
+            <table border="1" >
+<tr>
+    <td bgcolor="#dddddd" colspan="11"><font size="1">
+        Generated at Tue Apr 05 11:51:35 UTC 2022 by Weronika Piotrowska using Jira 1001.0.0-SNAPSHOT#100198-sha1:db0759e050312e10b98fcc8d82c6c8e109e78f67.
+    </font></td>
+</tr>
+</table>
+
+</body>
+</html>
