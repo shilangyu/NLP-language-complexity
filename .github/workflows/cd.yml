@@ -1,0 +1,28 @@
+name: cd
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: report
+          root_file: report.tex
+
+      - name: Move generated file to build/
+        run: |
+          mkdir build
+          mv report/report.pdf build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages
+          folder: build
