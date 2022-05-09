@@ -1,2 +1,3 @@
 issues.csv
-output/*
+output/
+output/*.csv
