@@ -1,16 +1,22 @@
+from logging import warning
 from typing import Dict, List
 from os import mkdir
 from os.path import exists
 from re import finditer
 import pandas as pd
 
-DEBUG = True
+DEBUG = False
+WARN = False
 
 REGULAR_FILE_NAME = "issues.csv"
 DEBUG_FILE_NAME   = "tiny.csv"
 DELIMETER         = ","
 OUTPUT_DIR        = "output"
 DEBUG_LINE        = "======================"
+REMOVE_CHARACTERS = ["\\n","\\t","\\r"]
+
+
+warnings = 0
 
 class DataEntry:
     author: str
@@ -28,27 +34,38 @@ class DataEntry:
         return DELIMETER.join(["author","text"]) + "\n"
 
 def main():
-
     def processText(raw_text:str) -> str:
+        global warnings
         indexes = [(m.start(0), m.end(0)) for m in finditer("```", raw_text)]
         
-        if not len(indexes) in [0,2]:
-            raise ValueError(f"[```] was found more than once.\n{DEBUG_LINE}\n {raw_text} \n{DEBUG_LINE}")
-            
+        if not len(indexes)%2 == 0:
+            warnings += 1
+            if WARN:
+                print(f"[WARN][```] was found odd number of times.\n{DEBUG_LINE}\n {raw_text} \n{DEBUG_LINE}")
+            indexes.append((0,len(raw_text)-1))
+
         text = raw_text
-        if not len(indexes) == 0:
-            str1 = raw_text[:indexes[0][0]]
-            str2 = raw_text[indexes[1][1]:]
-            text = f"{str1} {str2}"
+        offset = 0
+        for i in range(len(indexes)//2):
+            idx1 = indexes[2*i][0] - offset
+            idx2 = indexes[2*i+1][1] - offset
+            offset += idx2 - idx1
+            text = f"{text[:idx1]} {text[idx2:]}" 
             
         return text
 
+    global warnings
     filename = DEBUG_FILE_NAME if DEBUG else REGULAR_FILE_NAME
+    print(f"[INFO] Reading file {filename}...")
     data = pd.read_csv(filename, sep=DELIMETER, names = ["author","language","raw_text"], header=0)
+    data = data.fillna("")
 
     data_dict:Dict[str, List[DataEntry]] = {}
 
-    for _, row in data.iterrows():
+    l  = len(data)
+
+    for i, row in data.iterrows():
+        print(f"\r[INFO] Processing data segment {i}\{l}...",end="")
         author   = row["author"]
         language = row["language"]
         raw_text = row["raw_text"]
@@ -56,11 +73,12 @@ def main():
         text = processText(raw_text)
         entry = DataEntry(author,text)
 
-        if language in data.keys():
+        if language in data_dict.keys():
             data_dict[language].append(entry)
         else:
             data_dict[language] = [entry]
-    
+
+    print(f"[INFO] Process finished with {warnings} warnings. Saving outputs to [{OUTPUT_DIR}] directory.")
 
     if not exists(OUTPUT_DIR):
         mkdir(OUTPUT_DIR)
@@ -71,6 +89,8 @@ def main():
         for entry in vals:
             file.write(str(entry))
         file.close()
+        print(f"[INFO] File [{key}.csv] succesfully created.")
+
 
 
 if __name__ == "__main__":
