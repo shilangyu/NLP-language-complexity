@@ -1,12 +1,16 @@
 from typing import Dict, List
 from os import mkdir
 from os.path import exists
+from re import finditer
 import pandas as pd
 
-
 DEBUG = True
-DELIMETER = ","
-OUTPUT_DIR = "output"
+
+REGULAR_FILE_NAME = "issues.csv"
+DEBUG_FILE_NAME   = "tiny.csv"
+DELIMETER         = ","
+OUTPUT_DIR        = "output"
+DEBUG_LINE        = "======================"
 
 class DataEntry:
     author: str
@@ -26,9 +30,20 @@ class DataEntry:
 def main():
 
     def processText(raw_text:str) -> str:
-        return raw_text
+        indexes = [(m.start(0), m.end(0)) for m in finditer("```", raw_text)]
+        
+        if not len(indexes) in [0,2]:
+            raise ValueError(f"[```] was found more than once.\n{DEBUG_LINE}\n {raw_text} \n{DEBUG_LINE}")
+            
+        text = raw_text
+        if not len(indexes) == 0:
+            str1 = raw_text[:indexes[0][0]]
+            str2 = raw_text[indexes[1][1]:]
+            text = f"{str1} {str2}"
+            
+        return text
 
-    filename = "tiny.csv" if DEBUG else "issues.csv"
+    filename = DEBUG_FILE_NAME if DEBUG else REGULAR_FILE_NAME
     data = pd.read_csv(filename, sep=DELIMETER, names = ["author","language","raw_text"], header=0)
 
     data_dict:Dict[str, List[DataEntry]] = {}
@@ -49,7 +64,6 @@ def main():
 
     if not exists(OUTPUT_DIR):
         mkdir(OUTPUT_DIR)
-
 
     for key, vals in data_dict.items():
         file = open(f"{OUTPUT_DIR}/{key}.csv",mode='w')
