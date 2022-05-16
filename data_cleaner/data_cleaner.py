@@ -1,16 +1,15 @@
 import csv
 import re
 from multiprocessing import Pool
-from typing import Optional, Any
 from os import mkdir
 from os.path import exists
-from re import finditer
+from typing import Optional, Any
 
 import attr
-from mistletoe import Document
 import langdetect
 import pandas as pd
 from langdetect import DetectorFactory, LangDetectException
+from mistletoe import Document
 from mistletoe.block_token import BlockToken, CodeFence, List, Heading
 from mistletoe.span_token import SpanToken, Image, Link
 from tqdm import tqdm
