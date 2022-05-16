@@ -27,3 +27,5 @@ Navigate to this folder in console and run
 ### Solution description
 
 Program analyzes the csv file and extracts 4 output files (one for a given language) with cleaned data.
+
+tiny.csv is used for debug, it contains a small data sample from the original file.
