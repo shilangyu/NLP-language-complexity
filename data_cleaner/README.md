@@ -27,3 +27,11 @@ pipenv run python data_cleaner.py
 Program analyzes the csv file and extracts 4 output files (one for a given language) with cleaned data.
 
 `tiny.csv` is used for debug, it contains a small data sample from the original file.
+
+#### Text processing procedure:
+
+1. Parse markdown and strip selected tokens *(CodeFence, Heading, List, Image, Link)*.
+2. Use regex to remove additional raw text patterns *(hashtags, partial code blocks, urls)*.
+3. Remove unnecessary whitespace *(new line, double space, leading, trailing)*.
+4. Drop entry if contains non-ASCII characters.
+5. Drop entry if `langdetect` determines it to be non-english.
