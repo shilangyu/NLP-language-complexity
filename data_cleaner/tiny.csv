@@ -1,0 +1,91 @@
+author_login,language,content
+llSourcell,Python,"I get the following error when i attempt to train the network. Any ideas? I'm pretty sure all the dependencies are properly installed since the setup bash script worked. 
+
+```
+1482-sraval:tf_seq2seq_chatbot sraval$ python train.py
+You are using the decoding_enhanced library!
+Initializer Library -- Will add to this if necessary.
+Unitary Linear has been imported
+Preparing dialog data in /var/lib/tf_seq2seq_chatbot/data
+I tensorflow/core/common_runtime/local_device.cc:40] Local device intra op parallelism threads: 4
+I tensorflow/core/common_runtime/direct_session.cc:58] Direct session inter op parallelism threads: 4
+Creating 4 layers of 2048 units.
+use aggregation_method=2
+/Library/Python/2.7/site-packages/tensorflow/python/ops/gradients.py:87: UserWarning: Converting sparse IndexedSlices to a dense Tensor with 163840000 elements. This may consume a large amount of memory.
+  ""This may consume a large amount of memory."" % num_elements)
+Created model with fresh parameters.
+Traceback (most recent call last):
+  File ""train.py"", line 15, in <module>
+    tf.app.run()
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/platform/default/_app.py"", line 30, in run
+    sys.exit(main(sys.argv))
+  File ""train.py"", line 12, in main
+    train()
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/train.py"", line 28, in train
+    model = create_model(sess, forward_only=False)
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/seq2seq_model_utils.py"", line 35, in create_model
+    session.run(tf.initialize_all_variables())
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/client/session.py"", line 368, in run
+    results = self._do_run(target_list, unique_fetch_targets, feed_dict_string)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/client/session.py"", line 444, in _do_run
+    e.code)
+tensorflow.python.framework.errors.InvalidArgumentError: Cannot assign a device to node 'embedding_attention_seq2seq/embedding_attention_decoder/attention_decoder/MultiRNNCell/Cell3/GRUCell/Candidate/Linear/Bias': Could not satisfy explicit device specification '/gpu:3'
+     [[Node: embedding_attention_seq2seq/embedding_attention_decoder/attention_decoder/MultiRNNCell/Cell3/GRUCell/Candidate/Linear/Bias = Variable[container="""", dtype=DT_FLOAT, shape=[2048], shared_name="""", _device=""/gpu:3""]()]]
+Caused by op u'embedding_attention_seq2seq/embedding_attention_decoder/attention_decoder/MultiRNNCell/Cell3/GRUCell/Candidate/Linear/Bias', defined at:
+  File ""train.py"", line 15, in <module>
+    tf.app.run()
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/platform/default/_app.py"", line 30, in run
+    sys.exit(main(sys.argv))
+  File ""train.py"", line 12, in main
+    train()
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/train.py"", line 28, in train
+    model = create_model(sess, forward_only=False)
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/seq2seq_model_utils.py"", line 27, in create_model
+    forward_only=forward_only)
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/seq2seq_model.py"", line 149, in __init__
+    softmax_loss_function=softmax_loss_function)
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/seq2seq_enhanced.py"", line 629, in model_with_buckets
+    bucket_decoder_inputs) #nick pay attention here -- you added bucket_states
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/seq2seq_model.py"", line 148, in <lambda>
+    lambda x, y: seq2seq_f(x, y, False),
+  File ""/Users/sraval/Desktop/yooo2/tf_seq2seq_chatbot/tf_seq2seq_chatbot/lib/seq2seq_model.py"", line 112, in seq2seq_f
+    feed_previous=do_decode)
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/seq2seq_enhanced.py"", line 341, in embedding_attention_seq2seq
+    temperature_decode = temperature_decode, temperature = temperature)
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/seq2seq_enhanced.py"", line 259, in embedding_attention_decoder
+    temperature = temperature)
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/seq2seq_enhanced.py"", line 159, in attention_decoder
+    cell_output, new_state = cell(x, hidden_state_input) #nick, changed this to your hidden state input
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/rnn_cell_enhanced.py"", line 1149, in __call__
+    cur_inp, new_state = cell(cur_inp, cur_state) #this replaces cur_inp to a differen input
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/rnn_cell_enhanced.py"", line 520, in __call__
+    c = tf.tanh(linear.linear([inputs, r * state], self._num_units, True))
+  File ""build/bdist.macosx-10.10-intel/egg/rnn_enhancement/linear_enhanced.py"", line 68, in linear
+    initializer=tf.constant_initializer(bias_start))
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/variable_scope.py"", line 242, in get_variable
+    trainable, collections)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/variable_scope.py"", line 175, in get_variable
+    self.reuse, trainable, collections)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/variable_scope.py"", line 119, in get_variable
+    collections=collections)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/variables.py"", line 210, in __init__
+    name=name)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/state_ops.py"", line 116, in variable_op
+    container=container, shared_name=shared_name)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/gen_state_ops.py"", line 334, in _variable
+    name=name)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/ops/op_def_library.py"", line 664, in apply_op
+    op_def=op_def)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/framework/ops.py"", line 1834, in create_op
+    original_op=self._default_original_op, op_def=op_def)
+  File ""/Library/Python/2.7/site-packages/tensorflow/python/framework/ops.py"", line 1043, in __init__
+    self._traceback = _extract_stack()
+```
+"
+Kubuxu,Go,"The `main.css` file is missing for me. It changed recently.
+"
+Kubuxu,Go,"go-multicodec uses `/json` as an example, spec says `/json/`.
+
+@dignifiedquire could you take a look at what js-multicodec is using?
+"
+Kubuxu,Go,"For dev purposes, it is good to have a range of valid codecs that can be used for developing support for new protocols. I think we had something like that in the past but I can't find it in the table right now."
