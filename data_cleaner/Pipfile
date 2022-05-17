@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "data_cleaner"
+
+[packages]
+attrs = "*"
+langdetect = "*"
+mistletoe = "*"
+pandas = "*"
+tqdm = "*"
+
+[dev-packages]
+autopep8 = "*"
+
+[requires]
+python_version = "3.10"

@@ -1,17 +1,16 @@
 import csv
 import re
 from multiprocessing import Pool
-from os import mkdir
-from os.path import exists
-from typing import Optional, Any
+from pathlib import Path
+from typing import Any, Optional, Tuple
 
 import attr
 import langdetect
 import pandas as pd
 from langdetect import DetectorFactory, LangDetectException
 from mistletoe import Document
-from mistletoe.block_token import BlockToken, CodeFence, List, Heading
-from mistletoe.span_token import SpanToken, Image, Link
+from mistletoe.block_token import BlockToken, CodeFence, Heading, List
+from mistletoe.span_token import Image, Link, SpanToken
 from tqdm import tqdm
 
 # Make langdetect deterministic
@@ -34,7 +33,7 @@ REGULAR_FILE_NAME = "issues.csv"
 DEBUG_FILE_NAME = "tiny.csv"
 
 # Directory where to store generated CSVs
-OUTPUT_DIR = "output"
+OUTPUT_DIR = Path("output")
 
 # These characters will be removed from the text
 REMOVE_PATTERN = re.compile(r'('
@@ -47,7 +46,7 @@ REMOVE_PATTERN = re.compile(r'('
 WHITESPACE_PATTERN = re.compile(r'\s+')
 
 # Programming languages with this name are ignored. (For some reason entry 163k-ish has 'language' langauge)
-IGNORE_PROGRAMMING_LANGUAGES = ["language"]
+IGNORE_PROGRAMMING_LANGUAGES = {"language"}
 
 # CSV with caught errors will have this name (do not add .csv)
 WARN_CSV_NAME = "warns"
@@ -95,7 +94,7 @@ def process_markdown(token: SpanToken | BlockToken) -> str:
     return ''
 
 
-def process_raw_text(raw_text: str) -> [str, bool]:
+def process_raw_text(raw_text: str) -> Tuple[str, bool]:
     global warnings
 
     text = process_markdown(Document(raw_text))
@@ -156,7 +155,8 @@ def main():
 
     filename = DEBUG_FILE_NAME if DEBUG else REGULAR_FILE_NAME
     print(f"[INFO] Reading file {filename}...")
-    data = pd.read_csv(filename, names=["author", "language", "raw_text"], header=0)
+    data = pd.read_csv(
+        filename, names=["author", "language", "raw_text"], header=0)
     data = data.fillna("")
 
     # This dictionary stores processed data
@@ -168,7 +168,8 @@ def main():
     # Process each entry and save it to the dict
     with Pool() as pool:
         for entry in tqdm(
-                pool.imap_unordered(process_entry, data.iterrows(), chunksize=16),
+                pool.imap_unordered(
+                    process_entry, data.iterrows(), chunksize=16),
                 desc='[INFO] Processing data segment',
                 total=len(data)):
             if not entry:
@@ -184,15 +185,15 @@ def main():
             if entry.text_warning:
                 data_dict[WARN_CSV_NAME].append(entry)
 
-    print(f"\n[INFO] Process finished with {warnings} warnings. Saving outputs to [{OUTPUT_DIR}] directory.")
+    print(
+        f"\n[INFO] Process finished with {warnings} warnings. Saving outputs to [{OUTPUT_DIR}] directory.")
 
     # Create output folder
-    if not exists(OUTPUT_DIR):
-        mkdir(OUTPUT_DIR)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # Create all CSV files
     for key, vals in data_dict.items():
-        with open(f"{OUTPUT_DIR}/{key}.csv", mode='w') as f:
+        with open(OUTPUT_DIR.joinpath(f"{key}.csv"), mode='w') as f:
             writer = csv.writer(f)
             writer.writerow(DataEntry.csv_header())
 

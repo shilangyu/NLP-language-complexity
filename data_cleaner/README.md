@@ -1,16 +1,14 @@
 # NLP language complexity data cleaner
 
-A data cleaner that removes unneccesary text, such as code blocks, unneccessary signs, ect.
+A data cleaner that removes unnecessary text, such as code blocks, unnecessary signs, ect.
 
 ### Installation
 
-Before running, make sure you have a python ver 3 environment ready, and run (Windows)
+Before running, make sure you have (Pipenv)[https://pipenv.pypa.io/en/latest/] installed, then install dependencies with
 
-> python -m pip install -r requirements.txt
-
-or, alternatively, on Mac/Linux:
-
-> python3 -m pip install -r requirements.txt
+```sh
+pipenv install
+```
 
 Download the scrapped data, or scrap it using the scrapper
 
@@ -18,14 +16,14 @@ Download the scrapped data, or scrap it using the scrapper
 
 Place the scrapped csv file in the main catalog of the data cleaner (same place of this README)
 
-Navigate to this folder in console and run
+Navigate to this folder in console and execute the script:
 
-> python data_cleaner.py
-
-> python3 data_cleaner.py
+```sh
+pipenv run python data_cleaner.py
+```
 
 ### Solution description
 
 Program analyzes the csv file and extracts 4 output files (one for a given language) with cleaned data.
 
-tiny.csv is used for debug, it contains a small data sample from the original file.
+`tiny.csv` is used for debug, it contains a small data sample from the original file.
