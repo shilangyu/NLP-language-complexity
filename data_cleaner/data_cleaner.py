@@ -1,4 +1,5 @@
 import csv
+import gzip
 import re
 from multiprocessing import Pool
 from pathlib import Path
@@ -27,12 +28,12 @@ In addition, a bonus file is created that contains raw text message that caused 
 WARN = False
 
 # File name of the scrapped dataset
-REGULAR_FILE_NAME = "issues.csv"
+REGULAR_FILE_NAME = "issues.csv.gz"
 
 # File name of the tiny dataset used in DEBUG mode
 DEBUG_FILE_NAME = "tiny.csv"
 
-# Directory where to store generated CSVs
+# Directory where to store generated CSV
 OUTPUT_DIR = Path("output")
 
 # These characters will be removed from the text
@@ -54,7 +55,7 @@ WARN_CSV_NAME = "warns"
 # DEBUG and WARN decorative line separator
 DEBUG_LINE = "======================"
 
-ONLY_HUMAN_LANGUAGES = {'en'}
+ONLY_NATURAL_LANGUAGES = {'en'}
 
 # ================= CODE STARTS HERE ====================================================
 warnings = 0
@@ -67,17 +68,17 @@ class DataEntry:
     """
     author: str
     programming_language: str
-    human_language: str
+    natural_language: str
     raw_text: str
     text: str
     text_warning: bool
 
     @staticmethod
     def csv_header() -> list[str]:
-        return ["author", "text"]
+        return ["author", "language", "text"]
 
     def csv_row(self) -> list[str]:
-        return [self.author, self.text]
+        return [self.author, self.programming_language, self.text]
 
 
 def process_markdown(token: SpanToken | BlockToken) -> str:
@@ -108,7 +109,7 @@ def process_raw_text(raw_text: str) -> Tuple[str, bool]:
     return text.strip(), text_warning
 
 
-def detect_human_language(text: str) -> Optional[str]:
+def detect_natural_language(text: str) -> Optional[str]:
     if not text:
         return None
 
@@ -135,15 +136,15 @@ def process_entry(args: tuple[Any, dict]) -> Optional[DataEntry]:
     if not text.isascii():
         return None
 
-    human_language = detect_human_language(text)
+    natural_language = detect_natural_language(text)
 
-    if human_language not in ONLY_HUMAN_LANGUAGES:
+    if natural_language not in ONLY_NATURAL_LANGUAGES:
         return None
 
     return DataEntry(
         author=author,
         programming_language=programming_language,
-        human_language=human_language,
+        natural_language=natural_language,
         raw_text=raw_text,
         text=text,
         text_warning=text_warning
@@ -191,16 +192,19 @@ def main():
     # Create output folder
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Create all CSV files
-    for key, vals in data_dict.items():
-        with open(OUTPUT_DIR.joinpath(f"{key}.csv"), mode='w') as f:
-            writer = csv.writer(f)
-            writer.writerow(DataEntry.csv_header())
+    # Check whether we want a gzipped file as output
+    opener = gzip.open if filename.endswith('.gz') else open
 
+    # Create all CSV files
+    with opener(OUTPUT_DIR.joinpath(filename), 'wt') as f:
+        writer = csv.writer(f)
+        writer.writerow(DataEntry.csv_header())
+
+        for key, vals in data_dict.items():
             for val in vals:
                 writer.writerow(val.csv_row())
-
-        print(f"[INFO] File [{key}.csv] created with ({len(vals)}) entries")
+            print(
+                f"[INFO] {key} saved with ({len(vals)}) entries")
 
 
 if __name__ == "__main__":
