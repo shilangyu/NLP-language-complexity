@@ -39,8 +39,9 @@ OUTPUT_DIR = Path("output")
 REMOVE_PATTERN = re.compile(r'('
                             r'#\w\S*|'  # hashtags
                             r'```.*|'  # partial code blocks
+                            r'<!-{2,}.*?-{2,}>|'  # comments
                             r'\w+://\S+'  # simple urls
-                            r')')
+                            r')', flags=re.DOTALL)
 
 # Whitespace replacement must be done AFTER REMOVE_PATTERN is complete
 WHITESPACE_PATTERN = re.compile(r'\s+')
