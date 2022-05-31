@@ -11,6 +11,7 @@ matplotlib = "*"
 requests = "*"
 tqdm = "*"
 jupyter = "*"
+textstat = "*"
 
 [dev-packages]
 autopep8 = "*"
