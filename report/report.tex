@@ -1,3 +1,4 @@
+
 \documentclass[]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -73,6 +74,130 @@ After scrapping the data, we are planning to perform following operations in ord
 \end{enumerate}
 
 We hope that after obtaining this data, there will be interesting conclusions that there exists dependency between a developer's primary programming language and the natural language he or she uses when describing issues on GitHub.
+
+\section{Results}
+\subsection{Basic text analysis}
+\begin{enumerate}
+    \item Average text length
+    
+    This graph presents average length of an issue description. We can observe that this value is similar for every analyzed language.
+    
+    
+    \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/avg_len.png}
+    \centering
+    \end{figure}
+    
+    \item Average lexical diversity of a single issue
+    
+    This value is the average lexical diversity of a single issue. This value is obtained by dividing the set of tokens over the number of words in a single issue. The value is then averaged for each language. We can observe that this issue is similar among every language.
+    
+        \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/lex_div_single.png}
+    \centering
+    \end{figure}
+    
+    \item Total lexical diversity
+    
+    This value is the lexical diversity of all issues among the language. It is obtained by dividing set of tokens over number of all words in all issues. We can see that the lexical diversity is small for every language, which means all of the programmers write similar issue descriptions. However, C programmers tend to use the most diverse descriptions.
+    
+            \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/lex_div_total.png}
+    \centering
+    \end{figure}
+    
+    \item Average word length
+    
+    This is the average word length for every language. We can observe that this value is similar among all languages.
+    
+                \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/word_len.png}
+    \centering
+    \end{figure}
+    
+    \item Percentage of words over 10 characters
+    
+    Here is the percentage of words over 10 characters used in all issue descriptions among all languages. We can observe that all the programmers use long words with similar frequency.
+    
+                    \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/long_words.png}
+    \centering
+    \end{figure}
+    
+\end{enumerate}
+
+\subsection{Frequency distributions}
+In this section, we present the frequency distribution of tokens in the text. We can see the most common words used, as well as the cumulative value of this words. 
+
+\begin{enumerate}
+
+\item Python
+
+In Python, the most commod words are would, like, code, use and using. Given over 2 900 000 tokens in the text, top 20 words make up to 37\% of the whole data.
+
+                        \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/freq_Python.png}
+    \centering
+    \end{figure}
+    
+    \item C
+    
+    In C language, the most common words used are would, file, like, use and code. We can see that, given over 2 600 000 tokens in the text, top 20 words made up to 34\% of the total text. 
+    
+                        \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/freq_C.png}
+    \centering
+    \end{figure}
+    
+    \item JavaScript
+    
+    In JavaScript, the most common words are would, like, use, using, could. Given 3 700 000 tokens in the whole text, top 20 words make up to over 40\% of the whole data.
+    
+                            \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/freq_java.png}
+    \centering
+    \end{figure}
+    
+    \item Golang
+    
+    In Go, most common words are would, like, go, use, using. Given over 4 500 000 tokens, the top 20 make up to 40\% of the whole text.
+    
+                                \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/freq_Go.png}
+    \centering
+    \end{figure}
+    
+    
+\end{enumerate}
+
+We can observe that among all languages, issue comments contain variations of words would and use. The most informative feature is that C programmers use word 'file' a lot, probably to low-level file access provided by C. Golang programmers use word 'go' a lot, which may come from the language name.
+
+\subsection{Frequency of passive sentences}
+
+As expected, the frequency of passive sentences is high for all languages (in comparison to 10\% in most books), as it describes specific bugs in the code. One can see that C programmers use passive sentences the most, achieving almost 40\% of total passive sentences.
+
+                                \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/passives.png}
+    \centering
+    \end{figure}
+    
+\subsection{Flesch readability score}
+
+We can see that all of the languages fall into 60-70 interval, which leads them to be classified as easily understood by 13- to 15-year-old students. This score takes into account number of syllables per word and sentence length, which, as established earlier, was not high in most cases.
+
+    \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/flesch.png}
+    \centering
+    \end{figure}
+    
+\subsection{Flesch-Kincaid grade level}
+
+In this case, all languages scored below 10, which makes them extremely difficult to read, understood only by university graduates. However this metric also takes into account number of words and syllables per sentence, it is much different than the previous Flesch metric. However, in most cases any text has higher Flesch reading score than Flesch-Kincaid grade level. 
+
+    \begin{figure}[H]
+    \includegraphics[width=8cm]{resources/flesh_kincaid.png}
+    \centering
+    \end{figure}
 
 % \section{Attachments}
 
