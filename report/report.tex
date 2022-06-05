@@ -60,28 +60,36 @@ Every issue will be assigned a complexity/readability score based on industry-st
 
 \subsection{Scraping procedure} \label{scraping_procedure}
 
-To gather the needed data, the scraping procedure was organized into three steps described in the following subsections.
-
-\subsubsection{Getting raw data}
-
 Using the official GitHub API we first fetch a list of users which we want to examine. To improve the quality of issues which we will be later studying, we made an assumption that GitHub users with more followers in general write issues of higher quality. We intuitively correlate higher followers count with a greater professionalism and higher activity on the platform. For each programming language a list of top 1000 (in terms of amount of followers) users with at least 170 followers\footnote{170 followers was chosen as the cutoff because it was the argmax such that all four programming languages have at least 1000 users each} was downloaded. An additional reason as to why the previously mentioned subset of languages was chosen is that these (unlike other languages which we had wished to investigate, such as purely scientific programming languages) do have a 1000 users with a reasonable amount of followers. Only personal accounts where taken into account, so organizations were filtered out since they represent more than a single person. A user was considered to be a $\mathbf P$ language programmer if majority of their repositories are written in $\mathbf P$\footnote{\href{https://docs.github.com/en/search-github/searching-on-github/searching-users\#search-by-repository-language}{Quoting the GitHub documentation}: "{\it \code{language:javascript} users [...] with a majority of their repositories written in JavaScript.}"}.
 
 Afterwards, once we have a list of users (in total 4000 users) we proceed to fetching issues written by them. Top 100 issues created by a given user were downloaded. Only the body of the posted issue is saved, the thread that follows is ignored. Issues are ranked by the amount of interactions\footnote{An interaction consists of either a comment or a reaction} that they have received, thus top 100 issues refer to top 100 most active issues. Here, we make a similar assumption that more active issues correlate with a higher quality of natural language, for instance an RFC with naturally generates more traffic.
 
 Finally, the gathered data is saved to a \code{csv} file containing the original author, their programming language, and the body of the issue. Since not every user had 100 issues, the final amount of scaped was 233,686 (where the upper bound is 400,000 if every user had 100 issues). We believe this is a very comfortable amount and even if after cleaning we will lose 50\%, this still will be enough.
 
-\paragraph{Technical details}
+\subsubsection{Technical details}
 
 Scraper was written in the \href{https://www.rust-lang.org/}{Rust} programming language using the \href{https://github.com/XAMPPRocky/octocrab}{octocrab} library which wraps the official GitHub API. For all requests GitHub's search API was used, which has an unfortunate limit of 30 requests per minute. In each search call 100 items can be retrieved thus the whole scraping procedure spends $\frac{400000}{100 \cdot 30} = 133.(3)$ minutes on waiting for the limit rate alone. The scraper can be found in section \ref{attachments}.
 
 \subsection{Cleaning up the data}
 
-TODO
+The previously scraped raw data contains a lot of noise, thus it has to be cleaned up. GitHub issues use markdown a text format which is a super-set of HTML, it allows for simple text formatting. Them being in a standardized format means we are able to parse them and work on their AST. For each body of an issue the following steps are taken:
 
+\begin{enumerate}
+    \item Parse into markdown AST
+    \item Recursively walk the tree and skip tokens that are of non-interest (block code, inline code, links, images, etc.)
+    \item Serialize the AST back to a visual rendered string form without the skipped tokens
+\end{enumerate}
 
-Data scraped from GitHub will be cleaned up by removal of any non-natural language texts such as code blocks. We suspect that the dataset will be still full of true-negatives and will require manual labor to review our samples. Finally, the dataset will simply consist of two dimensions: text (issue content) and a label (programming language).
+After these steps we are left with a much cleaner string representation of an GitHub issue. However, some additional steps have to be taken with the markdown cleaning due to limitation of the parsing markdown library and due to GitHub-specific features. Namely the following things were removed: hashtags (on GitHub they reference a different issue/pull request), unclosed code blocks, HTML comments (often appear in GitHub as issue templates), and inline URLs. Lastly we remove repetitive whitespace.
 
-We want to focus on a specific subset of languages with a fairly balanced distribution between classes, also taking into account the repetition of issue posters.
+Now that we have clean utf-8 encoded text, we proceed to classify the content to its natural language. Since we are only interested in issues written in English we have to discard all issues written in a different natural language (for example chinese which was a common appearance). To do that a pre-trained model for Meta's \href{https://fasttext.cc/}{\code{fasttext}} NLP library. Given a string it classifies the natural language in which the text was written in. From there we filter in only those that were classified as english. Finally, if the cleanup content is not empty we save this entry into a new \code{csv} file.
+
+Unfortunately, as we expected the final corpus is not perfect. Because of the human factor, we cannot guarantee that we removed all of the noise. For instance, someone could've written some code without wrapping it into code blocks or an inline code span. Thus we expect to still see some unwanted text in to final corpus. The dataset is unfortunately too large for us to manually clean it up.
+
+\subsubsection{Technical details}
+
+The data cleaner was written in Python using the previously mentioned library \code{fasttext}, standard dataframe tool \code{pandas}, and a markdown parser \code{mistletoe}. This process is much faster as it operates on local data. The data cleaner can be found in section \ref{attachments}.
+
 
 \section{Functionalities}
 
@@ -231,6 +239,7 @@ In this case, all languages scored below 10, which makes them extremely difficul
 
 \begin{enumerate}
     \item %SCRAPER_ZIP%
+    \item %DATA_CLEANER_ZIP%
 \end{enumerate}
 
 
