@@ -6,16 +6,14 @@ from pathlib import Path
 from typing import Any, Optional, Tuple
 
 import attr
-import langdetect
+import fasttext
 import pandas as pd
-from langdetect import DetectorFactory, LangDetectException
 from mistletoe import Document
 from mistletoe.block_token import BlockToken, CodeFence, Heading, List
-from mistletoe.span_token import Image, Link, SpanToken
+from mistletoe.span_token import AutoLink, Image, InlineCode, Link, SpanToken
 from tqdm import tqdm
 
-# Make langdetect deterministic
-DetectorFactory.seed = 0
+lmodel = fasttext.load_model('./lid.176.bin')
 
 """
 DEBUG mode uses a tiny csv file (tiny.csv) for the purposes of testing.
@@ -84,7 +82,7 @@ class DataEntry:
 
 def process_markdown(token: SpanToken | BlockToken) -> str:
     # ignore some tokens
-    if isinstance(token, (CodeFence, Heading, List, Image, Link)):
+    if isinstance(token, (CodeFence, Heading, List, Image, Link, AutoLink, InlineCode)):
         return ''
 
     if hasattr(token, 'children'):
@@ -111,13 +109,12 @@ def process_raw_text(raw_text: str) -> Tuple[str, bool]:
 
 
 def detect_natural_language(text: str) -> Optional[str]:
-    if not text:
-        return None
+    pred = lmodel.predict([text])[0][0]
 
-    try:
-        return langdetect.detect(text)
-    except LangDetectException:
-        return None
+    if len(pred) > 0:
+        return pred[0].replace('__label__', '')
+
+    return None
 
 
 def process_entry(args: tuple[Any, dict]) -> Optional[DataEntry]:
@@ -133,8 +130,8 @@ def process_entry(args: tuple[Any, dict]) -> Optional[DataEntry]:
 
     text, text_warning = process_raw_text(raw_text)
 
-    # naive and quick english check (emojis break it!)
-    if not text.isascii():
+    # if issue has no content we can skip it whole
+    if text == "":
         return None
 
     natural_language = detect_natural_language(text)
