@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Generate attachments
+        working-directory: report
+        run: |
+          ./build-attachments.sh
+
       - uses: xu-cheng/latex-action@v2
         with:
           working_directory: report

@@ -1,2 +1,4 @@
 report/report.*
 !report/report.tex
+
+report/*.zip
