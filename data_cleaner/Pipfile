@@ -5,10 +5,10 @@ name = "data_cleaner"
 
 [packages]
 attrs = "*"
-langdetect = "*"
 mistletoe = "*"
 pandas = "*"
 tqdm = "*"
+fasttext = "*"
 
 [dev-packages]
 autopep8 = "*"

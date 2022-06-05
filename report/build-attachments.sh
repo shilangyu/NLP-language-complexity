@@ -15,3 +15,4 @@ prepare() {
 }
 
 prepare ../scraper/ scraper.zip 'Scraper source code' SCRAPER_ZIP
+prepare ../data_cleaner/ data_cleaner.zip 'Data cleaner source code' DATA_CLEANER_ZIP
