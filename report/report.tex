@@ -84,12 +84,22 @@ After these steps we are left with a much cleaner string representation of an Gi
 
 Now that we have clean utf-8 encoded text, we proceed to classify the content to its natural language. Since we are only interested in issues written in English we have to discard all issues written in a different natural language (for example chinese which was a common appearance). To do that a pre-trained model for Meta's \href{https://fasttext.cc/}{\code{fasttext}} NLP library. Given a string it classifies the natural language in which the text was written in. From there we filter in only those that were classified as english. Finally, if the cleanup content is not empty we save this entry into a new \code{csv} file.
 
-Unfortunately, as we expected the final corpus is not perfect. Because of the human factor, we cannot guarantee that we removed all of the noise. For instance, someone could've written some code without wrapping it into code blocks or an inline code span. Thus we expect to still see some unwanted text in to final corpus. The dataset is unfortunately too large for us to manually clean it up.
+Unfortunately, as we expected the final corpus is not perfect. Because of the human factor, we cannot guarantee that we removed all of the noise. For instance, someone could've written some code without wrapping it into code blocks or an inline code span. Thus we expect to still see some unwanted text in to final corpus. The dataset is unfortunately too large for us to manually clean it up. However we hope to be affected by these issues much less after choosing top users which should provide a higher quality of issues with regards to formatting. As seen on Fig. \ref{fig:cleaning-example} (in order of appearance) code blocks are removed, inline code is removed, non-english is discarded, and markdown formatting is removed to extract just the visual text.
 
 \subsubsection{Technical details}
 
 The data cleaner was written in Python using the previously mentioned library \code{fasttext}, standard dataframe tool \code{pandas}, and a markdown parser \code{mistletoe}. This process is much faster as it operates on local data. The data cleaner can be found in section \ref{attachments}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{cleaning-example.png}
+    \caption{A sample example before (left) and after (right) cleaning of a csv file of the scraped issues.}
+    \label{fig:cleaning-example}
+\end{figure}
+
+\subsection{Final corpus}
+
+After cleaning we were left with 190643 instances, which means 18.4\% of instances were discarded. This is a very comfortable amount of data to make some analysis and draw some meaningful conclusions. On the other hand, the final corpus is as much as 67.2\% smaller (77MB vs. 235MB text csv) than the raw one, which shows that there was a lot of noise present and was successfully removed. But as mentioned before, there are still some false negatives left which we were able to identify when skimming the final corpus, thus it must be kept in mind during further analysis.
 
 \section{Functionalities}
 
