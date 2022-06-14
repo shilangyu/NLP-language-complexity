@@ -12,6 +12,8 @@ requests = "*"
 tqdm = "*"
 jupyter = "*"
 textstat = "*"
+wordcloud = "*"
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"
