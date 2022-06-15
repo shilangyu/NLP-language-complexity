@@ -7,11 +7,13 @@ prepare() {
 	info=$3
 	tag=$4
 
+	name=${z/_/\\\\_}
+
 	rm $z || true
 
 	zip -r $z $p
 
-	sed -i'' -e "s|%$tag%|\\\textattachfile[color=0 0 1]{$z}{$z} -- $info|g" report.tex
+	sed -i'' -e "s|%$tag%|\\\textattachfile[color=0 0 1]{$z}{$name} -- $info|g" report.tex
 }
 
 prepare ../scraper/ scraper.zip 'Scraper source code' SCRAPER_ZIP
