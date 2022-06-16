@@ -60,7 +60,7 @@ Every issue will be assigned a complexity/readability score based on industry-st
 
 \subsection{Scraping procedure} \label{scraping_procedure}
 
-Using the official GitHub API we first fetch a list of users which we want to examine. To improve the quality of issues which we will be later studying, we made an assumption that GitHub users with more followers in general write issues of higher quality. We intuitively correlate higher followers count with a greater professionalism and higher activity on the platform. For each programming language a list of top 1000 (in terms of amount of followers) users with at least 170 followers\footnote{170 followers was chosen as the cutoff because it was the argmax such that all four programming languages have at least 1000 users each} was downloaded. An additional reason as to why the previously mentioned subset of languages was chosen is that these (unlike other languages which we had wished to investigate, such as purely scientific programming languages) do have a 1000 users with a reasonable amount of followers. Only personal accounts where taken into account, so organizations were filtered out since they represent more than a single person. A user was considered to be a $\mathbf P$ language programmer if majority of their repositories are written in $\mathbf P$\footnote{\href{https://docs.github.com/en/search-github/searching-on-github/searching-users\#search-by-repository-language}{Quoting the GitHub documentation}: "{\it \code{language:javascript} users [...] with a majority of their repositories written in JavaScript.}"}.
+Using the official GitHub API we first fetch a list of users which we want to examine. To improve the quality of issues which we will be later studying, we made an assumption that GitHub users with more followers in general write issues of higher quality. We intuitively correlate higher followers count with a greater professionalism and higher activity on the platform. For each programming language a list of top 1000 (in terms of amount of followers) users with at least 170 followers\footnote{170 followers was chosen as the cutoff because it was the argmax such that all four programming languages have at least 1000 users each} was downloaded. An additional reason as to why the previously mentioned subset of languages was chosen is that these (unlike other languages which we had wished to investigate, such as purely scientific programming languages) do have a 1000 users with a reasonable amount of followers. Only personal accounts where taken into account, so organizations were filtered out since they represent more than a single person. A user was considered to be a $\mathbf P$ language programmer if majority of their repositories are written in $\mathbf P$\footnote{\href{https://docs.github.com/en/search-github/searching-on-github/searching-users\#search-by-repository-language}{Quoting the GitHub documentation}: "{\it \code{language:javascript} users [...] with a majority of their repositories written in JavaScript.}"}. Thus it is important to remember that a single developer could be possibly writing in other languages as well, or even could be overlapping with other classes we are investigating. It is rare that a developer knows and uses only a single programming language.
 
 Afterwards, once we have a list of users (in total 4000 users) we proceed to fetching issues written by them. Top 100 issues created by a given user were downloaded. Only the body of the posted issue is saved, the thread that follows is ignored. Issues are ranked by the amount of interactions\footnote{An interaction consists of either a comment or a reaction} that they have received, thus top 100 issues refer to top 100 most active issues. Here, we make a similar assumption that more active issues correlate with a higher quality of natural language, for instance an RFC with naturally generates more traffic.
 
@@ -110,11 +110,11 @@ After scrapping the data, we are planning to perform following operations in ord
 
     \item Frequency of passive sentences -- in order to identify passive sentences we will use Part Of Speech tagging (POS). In English, a passive sentence can be defined by the place of the verb in the sentence and the form of this verb. We suspect the data to have high frequency of passive sentences, as it describes development issues.
 
-    \item Flesh-Kincaid Grade Level -- by evaluating the Flesh-Kincaid grade level, we can determine whether the text is readable to an average, non-developer person. It measures the length of the sentences and syllables per words, which indicated the easy to read or not. We expect developers of more complex programming languages to write harder to read issue descriptions.
+    \item Flesh-Kincaid Grade Level -- Flesch-Kincaid grade is an objective numerical description of how hard a passage is to read in the English language. The final score indicates the US education grade level, thus higher score means a more advanced usage of the language. By evaluating the grade level, we can determine the whether the text is readable to an average, non-developer person.
 
           \[0.39\left(\frac{\text{total words}}{\text{total sentences}}\right) + 11.8\left(\frac{\text{total syllables}}{\text{total words}}\right) - 15.59\]
 
-    \item Flesh readability score -- similarly to Flesh-Kincaid Grade Level, this score is used to measure level of difficulty when reading a text. We compute the score as follows:
+    \item Flesh readability score -- similarly to Flesh-Kincaid Grade Level, the Flesch reading score quantifies the ease of reading of a passage. Higher score indicates that the material is easier to read. We compute the score as follows:
 
           \[206.835 - 1.015\left(\frac{\text{total words}}{\text{total sentences}}\right) - 84.6\left(\frac{\text{total syllables}}{\text{total words}}\right)\]
 \end{enumerate}
@@ -122,11 +122,13 @@ After scrapping the data, we are planning to perform following operations in ord
 We hope that after obtaining this data, there will be interesting conclusions that there exists dependency between a developer's primary programming language and the natural language he or she uses when describing issues on GitHub.
 
 \section{Results}
+
 \subsection{Basic text analysis}
+
 \begin{enumerate}
     \item Average text length
 
-          This graph presents average length of an issue description. We can observe that this value is similar for every analyzed language.
+          This graph presents average length (in terms of words) of an issue description. We can observe that this value is similar for every analyzed class. Here C has the smallest average of 76 words, and Go has the largest with 81.5 words.
 
 
           \begin{figure}[H]
@@ -136,7 +138,7 @@ We hope that after obtaining this data, there will be interesting conclusions th
 
     \item Average lexical diversity of a single issue
 
-          This value is the average lexical diversity of a single issue. This value is obtained by dividing the set of tokens over the number of words in a single issue. The value is then averaged for each language. We can observe that this issue is similar among every language.
+          This value is the average lexical diversity of a single issue. This value is obtained by dividing the cardinality of the set of all normalized words by the total number of words in a single issue. The value is then averaged for each class. We can observe no meaningful differences.
 
           \begin{figure}[H]
               \includegraphics[width=8cm]{lex_div_single.png}
@@ -145,7 +147,7 @@ We hope that after obtaining this data, there will be interesting conclusions th
 
     \item Total lexical diversity
 
-          This value is the lexical diversity of all issues among the language. It is obtained by dividing set of tokens over number of all words in all issues. We can see that the lexical diversity is small for every language, which means all of the programmers write similar issue descriptions. However, C programmers tend to use the most diverse descriptions.
+          This value is the lexical diversity of all issues among the language. It is obtained by dividing the cardinality of the set of normalized words by the total number among all words in all issues per class. Here the situation is different, C shows an almost 1.5\% greater lexical diversity than Javascript and Golang. This could be due to the fact that C discussions often involve mentions of more cryptic library names, compiler flags, syscalls, etc. On the other hand, in the Golang and Javascript ecosystem things are often named using the natural language and thus blending in more uniformly into English which then do not increase the lexical diversity.
 
           \begin{figure}[H]
               \includegraphics[width=8cm]{lex_div_total.png}
@@ -154,16 +156,16 @@ We hope that after obtaining this data, there will be interesting conclusions th
 
     \item Average word length
 
-          This is the average word length for every language. We can observe that this value is similar among all languages.
+          This is the average word length for every language. We can observe that this value is similar among all classes. C and Golang show a higher average, but the difference is too small to have any statistical significance. The average of slightly above 4 aligns with the english average of 4.7 \cite{letterfreq}.
 
           \begin{figure}[H]
               \includegraphics[width=8cm]{word_len.png}
               \centering
           \end{figure}
 
-    \item Percentage of words over 10 characters
+    \item Fraction of words over some longer length
 
-          Here is the percentage of words over 10 characters used in all issue descriptions among all languages. We can observe that all the programmers use long words with similar frequency.
+          Here is the fraction of words over $\{8, 9, 10, 11\}$ characters long used in all issue descriptions among all languages. For the tested lengths, Javascript shows a lower percentage of longer words than other classes. C and Go equally exert a higher frequency of longer words compared to other classes.
 
           \begin{figure}[H]
               \includegraphics[width=8cm]{long_words.png}
@@ -173,6 +175,7 @@ We hope that after obtaining this data, there will be interesting conclusions th
 \end{enumerate}
 
 \subsection{Frequency distributions}
+
 In this section, we present the frequency distribution of tokens in the text. We can see the most common words used, as well as the cumulative value of this words.
 
 \begin{enumerate}
@@ -200,7 +203,7 @@ In this section, we present the frequency distribution of tokens in the text. We
           In JavaScript, the most common words are would, like, use, using, could. Given 3 700 000 tokens in the whole text, top 20 words make up to over 40\% of the whole data.
 
           \begin{figure}[H]
-              \includegraphics[width=8cm]{freq_java.png}
+              \includegraphics[width=8cm]{freq_Javascript.png}
               \centering
           \end{figure}
 
@@ -216,7 +219,51 @@ In this section, we present the frequency distribution of tokens in the text. We
 
 \end{enumerate}
 
-We can observe that among all languages, issue comments contain variations of words would and use. The most informative feature is that C programmers use word "{\it file}" a lot, probably to low-level file access provided by C. Golang programmers use word "{\it go}" a lot, which may come from the language name.
+We can observe that among all languages, issue comments contain variations of words \emph{would} and \emph{use}. We considered adding more stop words, but new common words kept surfacing which put us back to where we started. The most informative feature is that the word "\emph{file}" appears much less often in issues posted by Javascript developers in contrast to it being mentioned very often by C developers. This reflects the nature of the programming languages where C code manipulates files very often while Javascript being constrained to the browser does not have direct access to files.
+
+Another interesting word which was investigated closely is the common appearance of \emph{go} in issues posted by golang developers. Displaying the concordance of the word \emph{go} within issues from the Golang class revealed something interesting,
+
+\begin{verbatim}
+Displaying 25 of 11503 matches:
+nning tests works running tests godep go test failes find easy way send health
+ders happy work think right direction go currently supported dns provider goog
+s menu opened file press debug panels go version download etcd go mod shows er
+debug panels go version download etcd go mod shows error package becomed inter
+ internal etcd use package vendor use go module imported etcd error thrown ope
+o failed valid threw together running go mac needs repl getstreamstohost port 
+t many cases gjson makes use standard go package functions carefully uses help
+usage also important measures compare go web frameworks add prometheus monitor
+kqueue syscalls rather using standard go net package works similar manner libu
+ goal project create server framework go performs par redis haproxy packet han
+ling hope use foundation future proxy go bunch stuff support write rpcx servic
+ally macbook pro ghz intel core using go commands currently nearby command sup
+rocess see hi nice work porting gjson go rust creator maintainer noticed chose
+n use program relied mac uuid upgrade go cause big problem config get watch re
+url routers dynamic load need compile go file like revel format like last beeg
+ibrary may vendor tag release removed go build fail reproduce expected behavio
+uild fail reproduce expected behavior go build success screenshots applicable 
+chbase admin ui gotests makes writing go tests easy golang commandline tool ge
+ies test files automatically imported go go tool managing go source code usage
+ test files automatically imported go go tool managing go source code usage co
+atically imported go go tool managing go source code usage commands gor new do
+kage found relative path think things go much better project may become like p
+ch better project may become like pre go version go version serving peak load 
+roject may become like pre go version go version serving peak load system crea
+roject super convenience user develop go project bee sample download run sampl
+\end{verbatim}
+
+namely many of them are referring to the \href{https://pkg.go.dev/cmd/go}{Golang CLI tool} for compiling, linting, testing, etc. code. To confirm our suspicion all bigrams containing \emph{go} as the first token were examined. We noted how many times the second word in these bigrams is a Golang CLI subcommand.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=8cm]{go_occ.png}
+    \caption{Examined bigrams starting with \emph{go} and ending with a golang CLI subcommand. Also total occurrences are shown with the orange line.}
+    \label{fig:go-occ}
+\end{figure}
+
+One can see (Fig. \ref{fig:go-occ}) that Go demonstrates a noticeable difference, which explains the often usage of the word \emph{go} by golang developers. Additionally, golang has a language keyword \texttt{go} which runs a function concurrently. This function is at the core of Golang, and is very likely to be discussed often by its developers.
+
+It is interesting to see that even though the usage of the word \emph{go} by C developers is much rarer than by Golang developers, a big chunk of the occurrences (20\%) are in the context of a Golang CLI subcommand. To verify that the concordance of the word \emph{go} in the C class was checked. Mentions of \texttt{gccgo} and \texttt{cgo} can be noticed. These are respectively the GNU Golang compiler and the C interface for Golang programs. It would seem, that C developers are also Golang developers thus the increase use of the word go in the context of the CLI tool.
 
 \subsection{Frequency of passive sentences}
 
@@ -229,7 +276,8 @@ As expected, the frequency of passive sentences is high for all languages (in co
 
 \subsection{Flesch readability score}
 
-We can see that all of the languages fall into 60-70 interval, which leads them to be classified as easily understood by 13- to 15-year-old students. This score takes into account number of syllables per word and sentence length, which, as established earlier, was not high in most cases.
+In our case, C and Go developers show a lower score than Python and Javascript. However all classes would be still classified in the 60-70 range, described as {\it Plain English. Easily understood by 13- to 15-year-old students} \cite{flesch}. This score takes into account number of syllables per word and sentence length, which, as established earlier, was not high in most cases.
+
 
 \begin{figure}[H]
     \includegraphics[width=8cm]{flesch.png}
@@ -238,12 +286,36 @@ We can see that all of the languages fall into 60-70 interval, which leads them 
 
 \subsection{Flesch-Kincaid grade level}
 
-In this case, all languages scored below 10, which makes them extremely difficult to read, understood only by university graduates. However this metric also takes into account number of words and syllables per sentence, it is much different than the previous Flesch metric. However, in most cases any text has higher Flesch reading score than Flesch-Kincaid grade level.
+In this case, all languages scored below 9. Similarly to the reading score, both C and Go issues rank higher therefore are deemed to be harder to understand.
 
 \begin{figure}[H]
     \includegraphics[width=8cm]{flesh_kincaid.png}
     \centering
 \end{figure}
+
+\subsection{Sentiment analysis}
+
+Using NLTK's pretrained sentiment analyzer called VADER, each issue is assigned the compound sentiment intensity (in range $[-1; 1]$ where -1 represents the negative polarity, and +1 the positive one).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=8cm]{sentiment.png}
+\end{figure}
+
+C and Go issues exhibit a more negative sentiment. Since these languages are much more lower level compared to the other two, then we can expected them to be more frustrating which in turn causes the anger to be transferred onto GitHub issues. Additionally, C issues show the smallest total mean for the sentiment intensity, making it on average the most negative class of the four.
+
+\subsection{Wordcloud}
+
+For eye-candy purposes a wordcloud is constructed for each class with redacted common stopwords.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{wordcloud.png}
+    \caption{Wordclouds of all issues concatenated per class masked by the class language logo}
+\end{figure}
+
+No meaningful conclusions can be drawn from this. The only thing that caught our eye is the large \emph{error} word in the golang wordcloud. Possibly attributed to error being a first-party type in Golang\footnote{\url{https://pkg.go.dev/errors}}.
+
 
 \section{Attachments} \label{attachments}
 
@@ -252,5 +324,13 @@ In this case, all languages scored below 10, which makes them extremely difficul
     \item %DATA_CLEANER_ZIP%
 \end{enumerate}
 
+
+\begin{thebibliography}{9}
+    \bibitem{letterfreq}
+    Peter Norvig (2012): \emph{English Letter Frequency Counts: Mayzner Revisited} \url{http://norvig.com/mayzner.html}
+
+    \bibitem{flesch}
+    Rudolf Flesch (1979): \emph{How to Write Plain English: A Book for Lawyers and Consumers}
+\end{thebibliography}
 
 \end{document}
