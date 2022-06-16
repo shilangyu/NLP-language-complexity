@@ -324,6 +324,15 @@ For eye-candy purposes a wordcloud is constructed for each class with redacted c
 
 No meaningful conclusions can be drawn from this. The only thing that caught our eye is the large \emph{error} word in the golang wordcloud. Possibly attributed to error being a first-party type in Golang\footnote{\url{https://pkg.go.dev/errors}}.
 
+\newpage
+
+\section{Conclusions}
+
+As presented, gathered results were unfortunately underwhelming. In many cases classes showed very little variance. We believe that our aggressive normalization could negatively affect the final results. For example, we chose most popular Github users which possibly do not represent the real demographic for each class and only show the most advanced programmers. Often more advanced programmers are fluent in multiple programming languages which violates our isolation of classes. This was observed during word frequency distribution analysis where C programmers were also Golang programmers. In retrospection, we could have chosen a more representative group by for example choosing random users regardless of their popularity. We, however, feared to do so due to expected lower quality of posted issues. A different data source could be used too, perhaps dedicated programming language forums which should contain much more isolated data.
+
+On the other hand, we do believe the shown results do point at some small, but existing difference. C and Go classes often scored as "more complex" in many different measured statistics. One could exploit these differences and build a feature map from them to then train a classifier.
+
+Given the presented information, we conclude that differences in natural language complexity used by developers of different programming languages are too small to be statistically significant, but we do encourage a similar study to be performed on a much more controlled set of data.
 
 \section{Attachments} \label{attachments}
 
