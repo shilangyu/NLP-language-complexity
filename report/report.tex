@@ -50,6 +50,26 @@ In the end the following set of programming languages was chosen:
 
 We believe this subset will represent a wide range of kinds of programmers: Python used by beginners/scientific community, C used by low level developers, JavaScript used by everyone, and Golang used by modern system's programmers. Thus they have a different target demographic so we believe it should show some noticeable differences. Another reason this subset was chosen is the availability of resources: these language are quite popular therefore much data is present for it in GitHub (discussed in greater detail in section \ref{scraping_procedure}).
 
+\section{Functionalities}
+
+After scrapping the data, we are planning to perform following operations in order to give us a more complete insight
+
+\begin{enumerate}
+    \item Basic text analysis -- this includes average length of sentences, average length of words, most common word occurring etc. We are expecting developers of more complex programming languages to use more sophisticated language in the reported issues, this includes less grammar mistakes, longer sentences and words.
+
+    \item Frequency of passive sentences -- in order to identify passive sentences we will use Part Of Speech tagging (POS). In English, a passive sentence can be defined by the place of the verb in the sentence and the form of this verb. We suspect the data to have high frequency of passive sentences, as it describes development issues.
+
+    \item Flesh-Kincaid Grade Level -- Flesch-Kincaid grade is an objective numerical description of how hard a passage is to read in the English language. The final score indicates the US education grade level, thus higher score means a more advanced usage of the language. By evaluating the grade level, we can determine the whether the text is readable to an average, non-developer person.
+
+          \[0.39\left(\frac{\text{total words}}{\text{total sentences}}\right) + 11.8\left(\frac{\text{total syllables}}{\text{total words}}\right) - 15.59\]
+
+    \item Flesh readability score -- similarly to Flesh-Kincaid Grade Level, the Flesch reading score quantifies the ease of reading of a passage. Higher score indicates that the material is easier to read. We compute the score as follows:
+
+          \[206.835 - 1.015\left(\frac{\text{total words}}{\text{total sentences}}\right) - 84.6\left(\frac{\text{total syllables}}{\text{total words}}\right)\]
+\end{enumerate}
+
+We hope that after obtaining this data, there will be interesting conclusions that there exists dependency between a developer's primary programming language and the natural language he or she uses when describing issues on GitHub.
+
 \section{Data sourcing}
 
 The linguistic data will be primarily scraped from the GitHub issues, where developers, using natural language, often describe bugs or feature requests related to some piece of software. And since the code there is publicly available, it is easy to assign a specific programming language to it.
@@ -101,27 +121,15 @@ The data cleaner was written in Python using the previously mentioned library \c
 
 After cleaning we were left with 190643 instances, which means 18.4\% of instances were discarded. This is a very comfortable amount of data to make some analysis and draw some meaningful conclusions. On the other hand, the final corpus is as much as 67.2\% smaller (77MB vs. 235MB text csv) than the raw one, which shows that there was a lot of noise present and was successfully removed. But as mentioned before, there are still some false negatives left which we were able to identify when skimming the final corpus, thus it must be kept in mind during further analysis.
 
-\section{Functionalities}
+\section{Results}
 
-After scrapping the data, we are planning to perform following operations in order to give us a more complete insight
+Throughout the analysis we operated on three types of data:
 
 \begin{enumerate}
-    \item Basic text analysis -- this includes average length of sentences, average length of words, most common word occurring etc. We are expecting developers of more complex programming languages to use more sophisticated language in the reported issues, this includes less grammar mistakes, longer sentences and words.
-
-    \item Frequency of passive sentences -- in order to identify passive sentences we will use Part Of Speech tagging (POS). In English, a passive sentence can be defined by the place of the verb in the sentence and the form of this verb. We suspect the data to have high frequency of passive sentences, as it describes development issues.
-
-    \item Flesh-Kincaid Grade Level -- Flesch-Kincaid grade is an objective numerical description of how hard a passage is to read in the English language. The final score indicates the US education grade level, thus higher score means a more advanced usage of the language. By evaluating the grade level, we can determine the whether the text is readable to an average, non-developer person.
-
-          \[0.39\left(\frac{\text{total words}}{\text{total sentences}}\right) + 11.8\left(\frac{\text{total syllables}}{\text{total words}}\right) - 15.59\]
-
-    \item Flesh readability score -- similarly to Flesh-Kincaid Grade Level, the Flesch reading score quantifies the ease of reading of a passage. Higher score indicates that the material is easier to read. We compute the score as follows:
-
-          \[206.835 - 1.015\left(\frac{\text{total words}}{\text{total sentences}}\right) - 84.6\left(\frac{\text{total syllables}}{\text{total words}}\right)\]
+    \item {\bf Text} -- String, "Raw" cleaned up text from the previous scraping+cleaning steps
+    \item {\bf Tokenized text} -- List of strings, {\bf Text} but tokenized to individual tokens
+    \item {\bf Normalized text} -- List of strings, {\bf Tokenized text} but normalized. That is, made lowercase, removed punctuation, removed stopwords.
 \end{enumerate}
-
-We hope that after obtaining this data, there will be interesting conclusions that there exists dependency between a developer's primary programming language and the natural language he or she uses when describing issues on GitHub.
-
-\section{Results}
 
 \subsection{Basic text analysis}
 
@@ -267,7 +275,7 @@ It is interesting to see that even though the usage of the word \emph{go} by C d
 
 \subsection{Frequency of passive sentences}
 
-As expected, the frequency of passive sentences is high for all languages (in comparison to 10\% in most books), as it describes specific bugs in the code. One can see that C programmers use passive sentences the most, achieving almost 40\% of total passive sentences.
+Here POS tagging was used to classify sentences as passive or not. As expected, the frequency of passive sentences is high for all languages (in comparison to 10\% in most books), as it describes specific bugs in the code. One can see that C programmers use passive sentences the most, achieving almost 40\% of total passive sentences.
 
 \begin{figure}[H]
     \includegraphics[width=8cm]{passives.png}
