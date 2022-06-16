@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 prepare() {
@@ -18,3 +18,4 @@ prepare() {
 
 prepare ../scraper/ scraper.zip 'Scraper source code' SCRAPER_ZIP
 prepare ../data_cleaner/ data_cleaner.zip 'Data cleaner source code' DATA_CLEANER_ZIP
+prepare ../analysis/ analysis.zip 'Analysis notebook and assets' ANALYSIS_ZIP
